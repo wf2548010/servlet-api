@@ -66,12 +66,18 @@ import java.util.*;
  * servlet container creates a <code>ServletRequest</code> object and passes
  * it as an argument to the servlet's <code>service</code> method.
  *
+ * 定义向Servlet提供客户端请求信息的对象
+ * Servle容器创建一个ServletRequest对象并将其作为参数传递给Servlet的Service方法
+ *
  * <p>A <code>ServletRequest</code> object provides data including
  * parameter name and values, attributes, and an input stream.
  * Interfaces that extend <code>ServletRequest</code> can provide
  * additional protocol-specific data (for example, HTTP data is
  * provided by {@link javax.servlet.http.HttpServletRequest}.
- * 
+ *
+ * ServletRequest对象提供包括键值对、属性和输入流的数据。
+ * 拓展ServletRequest的接口可以提供附加的协议特定数据(例如，HTTP数据由HttpServletRequest提供)
+ *
  * @author Various
  *
  * @see javax.servlet.http.HttpServletRequest
@@ -83,8 +89,13 @@ public interface ServletRequest {
      * Returns the value of the named attribute as an <code>Object</code>,
      * or <code>null</code> if no attribute of the given name exists. 
      *
+     * 将属性值作为Object对象返回，如果给定属性不存在则返回null
+     *
      * <p> Attributes can be set two ways.  The servlet container may set
      * attributes to make available custom information about a request.
+     *
+     * 属性可以通过两种方式设置。Srevlet容器可以设置属性来提供关于请求的可用定制信息
+     *
      * For example, for requests made using HTTPS, the attribute
      * <code>javax.servlet.request.X509Certificate</code> can be used to
      * retrieve information on the certificate of the client.  Attributes
@@ -92,9 +103,16 @@ public interface ServletRequest {
      * {@link ServletRequest#setAttribute}.  This allows information to be
      * embedded into a request before a {@link RequestDispatcher} call.
      *
+     * 例如，对于HTTPS发出的请求，属性javax.servlet.requestX509Certificate可用于检索关于客户端证书的信息。
+     * 还可以使用ServletRequest#setAttribute以编程方式设置属性。
+     * 这允许在{RequestDisparcher}调用之前将信息潜入到请求中。
+     *
      * <p>Attribute names should follow the same conventions as package
      * names. This specification reserves names matching <code>java.*</code>,
      * <code>javax.*</code>, and <code>sun.*</code>. 
+     *
+     * 属性名应该遵循与包名相同的约定。
+     * 本规范保留了匹配代码 java.*、javax。*、sun.*x
      *
      * @param name a <code>String</code> specifying the name of the attribute
      *
@@ -108,7 +126,10 @@ public interface ServletRequest {
      * names of the attributes available to this request. 
      * This method returns an empty <code>Enumeration</code>
      * if the request has no attributes available to it.
-     * 
+     *
+     * 返回包含此请求可用的属性名称的枚举
+     *
+     *
      * @return an <code>Enumeration</code> of strings containing the names 
      * of the request's attributes
      */
@@ -118,7 +139,10 @@ public interface ServletRequest {
      * Returns the name of the character encoding used in the body of this
      * request. This method returns <code>null</code> if the request
      * does not specify a character encoding
-     * 
+     *
+     * 返回此请求正文中使用的字符编码的名称
+     *如果未指定编码集则返回NULL
+     *
      * @return a <code>String</code> containing the name of the character
      * encoding, or <code>null</code> if the request does not specify a
      * character encoding
@@ -129,7 +153,10 @@ public interface ServletRequest {
      * Overrides the name of the character encoding used in the body of this
      * request. This method must be called prior to reading request parameters
      * or reading input using getReader(). Otherwise, it has no effect.
-     * 
+     *
+     * 重写此请求正文中使用的字符编码的名称
+     * 在读取请求参数或使用getReader（）读取输入之前，必须调用此方法。否则，就没有效果。
+     *
      * @param env <code>String</code> containing the name of
      * the character encoding.
      *
@@ -144,6 +171,9 @@ public interface ServletRequest {
      * the input stream, or -1 if the length is not known ir is greater than
      * Integer.MAX_VALUE. For HTTP servlets,
      * same as the value of the CGI variable CONTENT_LENGTH.
+     *
+     * 返回请求正文的长度，以字节为单位，由输入流提供，如果长度未知或大于Integer的最大值则返回-1
+     * 对于HTTPServlet，与CGI变量CONTENT_LENGTH的值相同。
      *
      * @return an integer containing the length of the request body or -1 if
      * the length is not known or is greater than Integer.MAX_VALUE.
@@ -167,6 +197,8 @@ public interface ServletRequest {
      * <code>null</code> if the type is not known. For HTTP servlets, 
      * same as the value of the CGI variable CONTENT_TYPE.
      *
+     * 返回请求政委的MIME类型
+     *
      * @return a <code>String</code> containing the name of the MIME type
      * of the request, or null if the type is not known
      */
@@ -176,6 +208,9 @@ public interface ServletRequest {
      * Retrieves the body of the request as binary data using
      * a {@link ServletInputStream}.  Either this method or 
      * {@link #getReader} may be called to read the body, not both.
+     *
+     * 使用ServletInputStream作为二进制数据检索请求正文
+     * 可以调用此方法或getReader来读取正文，而不是同时调用两者
      *
      * @return a {@link ServletInputStream} object containing
      * the body of the request
@@ -192,6 +227,8 @@ public interface ServletRequest {
      * or <code>null</code> if the parameter does not exist. Request parameters
      * are extra information sent with the request.  For HTTP servlets,
      * parameters are contained in the query string or posted form data.
+     *
+     * 返回请求参数
      *
      * <p>You should only use this method when you are sure the
      * parameter has only one value. If the parameter might have
@@ -222,6 +259,9 @@ public interface ServletRequest {
      * in this request. If the request has 
      * no parameters, the method returns an empty <code>Enumeration</code>. 
      *
+     * 返回此请求中包换的参数名称的枚举
+     *
+     *
      * @return an <code>Enumeration</code> of <code>String</code>
      * objects, each <code>String</code> containing the name of
      * a request parameter; or an empty <code>Enumeration</code>
@@ -233,6 +273,8 @@ public interface ServletRequest {
      * Returns an array of <code>String</code> objects containing 
      * all of the values the given request parameter has, or 
      * <code>null</code> if the parameter does not exist.
+     *
+     * 返回包含给定请求参数具有的所有的值的对象数组
      *
      * <p>If the parameter has a single value, the array has a length
      * of 1.
@@ -249,7 +291,9 @@ public interface ServletRequest {
  
     /**
      * Returns a java.util.Map of the parameters of this request.
-     * 
+     *
+     * 返回java.util.Map类型的参数请求参数
+     *
      * <p>Request parameters are extra information sent with the request.
      * For HTTP servlets, parameters are contained in the query string or
      * posted form data.
@@ -268,6 +312,8 @@ public interface ServletRequest {
      * returned is the same as the value of the CGI variable 
      * <code>SERVER_PROTOCOL</code>.
      *
+     * 返回请求以protocol/majorVersion.minorVersion形式使用的协议的名称和版本
+     *
      * @return a <code>String</code> containing the protocol 
      * name and version number
      */    
@@ -280,6 +326,8 @@ public interface ServletRequest {
      * Different schemes have different rules for constructing URLs,
      * as noted in RFC 1738.
      *
+     * 返回用于发出此请求的方案的名称
+     *
      * @return a <code>String</code> containing the name 
      * of the scheme used to make this request
      */
@@ -291,6 +339,8 @@ public interface ServletRequest {
      * header value, if any, or the resolved server name, or the server IP
      * address.
      *
+     * 返回发送请求的服务器的主机名。它是<code>Host</code>头值中的“:”之前的部分的值（如果有的话），或者解析的服务器名称，或者服务器IP地址。
+     *
      * @return a <code>String</code> containing the name of the server
      */
     public String getServerName();
@@ -300,6 +350,8 @@ public interface ServletRequest {
      * It is the value of the part after ":" in the <code>Host</code>
      * header value, if any, or the server port where the client connection
      * was accepted on.
+     *
+     * 返回发送请求的端口号
      *
      * @return an integer specifying the port number
      */
@@ -311,6 +363,8 @@ public interface ServletRequest {
      * data according to the character encoding used on the body.
      * Either this method or {@link #getInputStream} may be called to read the
      * body, not both.
+     *
+     * 使用Buffer edReader检索请求政委作为字符数据
      * 
      * @return a <code>BufferedReader</code> containing the body of the request 
      *
@@ -331,6 +385,8 @@ public interface ServletRequest {
      * or last proxy that sent the request.
      * For HTTP servlets, same as the value of the 
      * CGI variable <code>REMOTE_ADDR</code>.
+     *
+     * 返回发送请求的客户端或最后一个代理的因特网协议（IP）地址。
      *
      * @return a <code>String</code> containing the 
      * IP address of the client that sent the request

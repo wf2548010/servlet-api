@@ -73,10 +73,15 @@ import javax.servlet.descriptor.JspConfigDescriptor;
  * servlet container, for example, to get the MIME type of a file, dispatch
  * requests, or write to a log file.
  *
+ * 定义servlet用来与servlet容器通信的一组方法。例如，用于获取文件的MIME类、派发请求或写入日志文件。
+ *
  * <p>There is one context per "web application" per Java Virtual Machine.  (A
  * "web application" is a collection of servlets and content installed under a
  * specific subset of the server's URL namespace such as <code>/catalog</code>
  * and possibly installed via a <code>.war</code> file.) 
+ *
+ * 每一个Java虚拟机每一个WEB应用程序都由一个上下文
+ * WEB应用是安装在服务器下的URL命名空间里的servlets和内容的集合
  *
  * <p>In the case of a web
  * application marked "distributed" in its deployment descriptor, there will
@@ -84,6 +89,9 @@ import javax.servlet.descriptor.JspConfigDescriptor;
  * context cannot be used as a location to share global information (because
  * the information won't be truly global).  Use an external resource like 
  * a database instead.
+ *
+ * 在部署描述符中标记为分布式的WEB应用程序的情况下，每个虚拟机都有一个上下文实例。
+ * 在这种情况下，上下文不能用作共享全局信息的位置(因为细腻些不是真正的全局信息)，使用外部资源。比如数据库
  *
  * <p>The <code>ServletContext</code> object is contained within 
  * the {@link ServletConfig} object, which the Web server provides the
@@ -101,6 +109,9 @@ public interface ServletContext {
      * The name of the <tt>ServletContext</tt> attribute which stores
      * the private temporary directory (of type <tt>java.io.File</tt>)
      * provided by the servlet container for the <tt>ServletContext</tt>
+     *
+     * Servlet上下文的名称，该属性存储Servlet上下文容器提供的私有临时目录（类型java.io.File）
+     *
      */
     public static final String TEMPDIR = "javax.servlet.context.tempdir";
 
@@ -113,6 +124,11 @@ public interface ServletContext {
      * <code>&lt;absolute-ordering&gt;</code> without any
      * <code>&lt;others/&gt;</code> is being used), or null if no
      * absolute or relative ordering has been specified
+     *
+     * Servlet上下文属性的名称，其值（类型java.utils.List和java.lang.String等）包含由网络片段名
+     * 排序的WEB-INF/lib中的JAR文件名的列表（如果不适用任何其他的绝对排序，则可能使用除外），或者
+     * 如果没有指定绝对或相对排序，则为NULL
+     *
      */
     public static final String ORDERED_LIBS =
         "javax.servlet.context.orderedLibs";
@@ -120,6 +136,8 @@ public interface ServletContext {
 
     /**
      * Returns the context path of the web application.
+     *
+     * 返回WEB应用程序的上下文路径。
      *
      * <p>The context path is the portion of the request URI that is used
      * to select the context of the request. The context path always comes
@@ -129,6 +147,12 @@ public interface ServletContext {
      * the root of the server’s name space, the path starts with a /
      * character but does not end with a / character.
      *
+     * 上下文路径是URI的一部分，用于选择请求的上下文。
+     * 在请求上下文URI中，上下文路径总是排在第一位。
+     * 如果此上下文位于WEB服务器URL名称的默认上下文，则此路径将是空字符串
+     * 否则，如果上下文不是位于服务器控件的高更路径，则以/字符开始。但不以/结束
+     *
+     *
      * <p>It is possible that a servlet container may match a context by
      * more than one context path. In such cases the
      * {@link javax.servlet.http.HttpServletRequest#getContextPath()}
@@ -137,8 +161,15 @@ public interface ServletContext {
      * The context path returned by this method should be considered as the
      * prime or preferred context path of the application.
      *
+     * Servlet容器可以通过多个上下文路径来匹配上下文。
+     * 在{javax.servlet.http.HttpServletRequest#getContextpath()}这个方法中将返回请求的实际上下文路径
+     * 并且可能与本类中的getContextPath方法返回的路径不同。
+     * 本方法返回的上下文路径应被视为应用程序的主要或首选上下文路径
+     *
      * @return The context path of the web application, or "" for the
      * default (root) context
+     *
+     * 应用程序的上下文路径，当为根路径时返回""
      *
      * @see javax.servlet.http.HttpServletRequest#getContextPath()
      *
@@ -151,22 +182,36 @@ public interface ServletContext {
      * Returns a <code>ServletContext</code> object that 
      * corresponds to a specified URL on the server.
      *
+     * 返回对应于服务器上指定URL的ServletContext对象
+     *
+     *
      * <p>This method allows servlets to gain
      * access to the context for various parts of the server, and as
      * needed obtain {@link RequestDispatcher} objects from the context.
      * The given path must be begin with <tt>/</tt>, is interpreted relative 
      * to the server's document root and is matched against the context
      * roots of other web applications hosted on this container.
-     * 
+     *
+     * 此方法允许Servlet访问服务器各个部分的上下文，并根据需要从上下文中获取{RequestDispatcher}对象
+     * 路径入参必须以/开始，可以理解为是服务器根路径。并且与托管在该容器上的其他web应用程序的上下文根路径匹配
+     *
+     *
      * <p>In a security conscious environment, the servlet container may
      * return <code>null</code> for a given URL.
-     *       
+     *
+     * 在安全意识环境中，servlet容器可以为给定的URL返回NULL
+     *
      * @param uripath 	a <code>String</code> specifying the context path of
      *			another web application in the container.
+     *
+     * 指定容器中另一个WEB应用程序的上下文路径的字符串
+     *
      * @return		the <code>ServletContext</code> object that
      *			corresponds to the named URL, or null if either
 			none exists or the container wishes to restrict 
      * 			this access.
+     *
+     * 对应于URL命名的ServletContext对象，或者如果不存在或者容器希望限制此访问，则为空。
      *
      * @see 		RequestDispatcher
      */
@@ -178,6 +223,9 @@ public interface ServletContext {
      * servlet container supports. All implementations that comply
      * with Version 3.0 must have this method return the integer 3.
      *
+     * 返回此Servlet容器支持的Servlet API的主要版本号
+     * 所有符合版本3.0的实现都必须让此方法返回整数3
+     *
      * @return 3
      */
     public int getMajorVersion();
@@ -188,6 +236,9 @@ public interface ServletContext {
      * servlet container supports. All implementations that comply
      * with Version 3.0 must have this method return the integer 0.
      *
+     * 返回此servlet容器支持的Servlet API的次要版本。
+     * 所有符合3.0版本的实现都必须让此方法返回整数0
+     *
      * @return 0
      */
     public int getMinorVersion();
@@ -197,18 +248,28 @@ public interface ServletContext {
      * Gets the major version of the Servlet specification that the
      * application represented by this ServletContext is based on.
      *
+     * 获取此ServletContext表示的应用程序所基于的Servlet规范的主要版本
+     *
+     *
      * <p>The value returned may be different from {@link #getMajorVersion},
      * which returns the major version of the Servlet specification
      * supported by the Servlet container.
+     * 返回的值可能与{getMajorVersio}你不同，后者返回Servlet容器支持的Servlet规范的只要版本。
      *
      * @return the major version of the Servlet specification that the
      * application represented by this ServletContext is based on
+     *
+     * ServletContext表示的应用程序所基于的Servlet规范的主要版本
      *
      * @throws UnsupportedOperationException if this ServletContext was
      * passed to the {@link ServletContextListener#contextInitialized} method
      * of a {@link ServletContextListener} that was neither declared in
      * <code>web.xml</code> or <code>web-fragment.xml</code>, nor annotated
      * with {@link javax.servlet.annotation.WebListener}
+     *
+     * 如果此ServletContext被传递给ServletContextListener的contextInitialized方法
+     * 没有在web.xml或者web-frasgment.xml中声明，也没有使用{javax.servlet.annotation.WebListener}注解
+     * 将抛出UnsupportedOperationException
      *
      * @since Servlet 3.0
      */
@@ -219,12 +280,16 @@ public interface ServletContext {
      * Gets the minor version of the Servlet specification that the
      * application represented by this ServletContext is based on.
      *
+     * 获取ServletContext标识的应用程序所给予的Servlet规范的次要版本
+     *
      * <p>The value returned may be different from {@link #getMinorVersion},
      * which returns the minor version of the Servlet specification
      * supported by the Servlet container.
      *
+     * 返回的值与{getMainorVersion}方法返回的次要版本号不同，后者返回Servelt容器支持的Servlet规范的次要版本号
+     *
      * @return the minor version of the Servlet specification that the
-     * application xrepresented by this ServletContext is based on
+     * application represented by this ServletContext is based on
      *
      * @throws UnsupportedOperationException if this ServletContext was
      * passed to the {@link ServletContextListener#contextInitialized} method
@@ -244,9 +309,18 @@ public interface ServletContext {
      * in a web application deployment descriptor. Common MIME
      * types include <code>text/html</code> and <code>image/gif</code>.
      *
+     * 返回指定文件的MINE类型，如果MIME类型未知的话返回NULL。
+     * MIME类型是由Servlet容器的配置决定的。并且可以在WEB应用程序部署描述符中指定
+     * 一般MINE类型包括{text/html}和{image/gif}
+     *
      * @param file a <code>String</code> specifying the name of a file
      *
+     *文件字符串名称
+     *
      * @return a <code>String</code> specifying the file's MIME type
+     *
+     * 文件的MIME类型字符串
+     *
      */
     public String getMimeType(String file);
     
@@ -256,12 +330,18 @@ public interface ServletContext {
      * within the web application whose longest sub-path matches the
      * supplied path argument.
      *
+     * 返回WEB应用程序中所有资源路径的目录式列表，其最长子路径与所提供的路径参数匹配。
+     *
      * <p>Paths indicating subdirectory paths end with a <tt>/</tt>.
      *
+     * 指示子目录路径的路径以/结尾
+     *
      * <p>The returned paths are all relative to the root of the web
-     * application, or relative to the <tt>/META-INF/resources</tt>
-     * directory of a JAR file inside the web application's
-     * <tt>/WEB-INF/lib</tt> directory, and have a leading <tt>/</tt>.
+         * application, or relative to the <tt>/META-INF/resources</tt>
+         * directory of a JAR file inside the web application's
+         * <tt>/WEB-INF/lib</tt> directory, and have a leading <tt>/</tt>.
+     *
+     * 返回的路径都与WEB应用程序的根路径有关，或者与WEB应用程序的/WEB-INF/lib目录内的JAR文件的/META-INF/resources目录有关，并且具有前导/
      *
      * <p>For example, for a web application containing:
      *
@@ -297,6 +377,8 @@ public interface ServletContext {
     /**
      * Returns a URL to the resource that is mapped to the given path.
      *
+     * 返回映射到给定路径的资源的URL
+     *
      * <p>The path must begin with a <tt>/</tt> and is interpreted
      * as relative to the current context root,
      * or relative to the <tt>/META-INF/resources</tt> directory
@@ -308,14 +390,22 @@ public interface ServletContext {
      * The order in which the JAR files inside <tt>/WEB-INF/lib</tt>
      * are searched is undefined.
      *
+     * 在搜索/WEB-INF/lib中的任何JAR文件之前，此方法将首先搜索web应用程序的文档更路径以查找请求的资源。
+     * 搜索/WEB-INF/lib中的JAR文件的顺序未定义
+     *
      * <p>This method allows the servlet container to make a resource 
      * available to servlets from any source. Resources 
      * can be located on a local or remote
      * file system, in a database, or in a <code>.war</code> file. 
      *
+     * 此方法允许servlet容器为来自任何源的servlet提供可用的资源
+     * 资源文件可以是本地的、远程系统的、数据库或者WAR文件中
+     *
      * <p>The servlet container must implement the URL handlers
      * and <code>URLConnection</code> objects that are necessary
      * to access the resource.
+     *
+     * Servlet容器必须实现访问资源所需的URL处理程序和URLConnection对象
      *
      * <p>This method returns <code>null</code>
      * if no resource is mapped to the pathname.
@@ -348,6 +438,8 @@ public interface ServletContext {
     /**
      * Returns the resource located at the named path as
      * an <code>InputStream</code> object.
+     *
+     * 将位于路径的资源以输入流对象返回
      *
      * <p>The data in the <code>InputStream</code> can be 
      * of any type or length. The path must be specified according
@@ -388,6 +480,8 @@ public interface ServletContext {
      * a request to the resource or to include the resource in a response.
      * The resource can be dynamic or static.
      *
+     * 返回{@link RequestDispatcher}对象，该对象充当位于给定路径的资源的包装器。
+     *
      * <p>The pathname must begin with a <tt>/</tt> and is interpreted as
      * relative to the current context root.  Use <code>getContext</code>
      * to obtain a <code>RequestDispatcher</code> for resources in foreign
@@ -415,6 +509,8 @@ public interface ServletContext {
     /**
      * Returns a {@link RequestDispatcher} object that acts
      * as a wrapper for the named servlet.
+     *
+     * 返回充当命名servlet的包装器的{@link RequestDispatcher}对象。
      *
      * <p>Servlets (and JSP pages also) may be given names via server 
      * administration or via a web application deployment descriptor.
@@ -449,6 +545,9 @@ public interface ServletContext {
      * binary compatibility. This method will be permanently removed 
      * in a future version of the Java Servlet API.
      *
+     * 最初定义此方法是为了从ServletContext检索servlet。
+     * 在这个版本中，这个方法总是返回<code>null</code>，并且只保持二进制兼容性。此方法将在Java Servlet API的未来版本中永久删除。
+     *
      * <p>In lieu of this method, servlets can share information using the 
      * <code>ServletContext</code> class and can perform shared business logic
      * by invoking methods on common non-servlet classes.
@@ -466,6 +565,9 @@ public interface ServletContext {
      * remains only to preserve binary compatibility. This method
      * will be permanently removed in a future version of the Java
      * Servlet API.
+     *
+     * 最初定义此方法是为了返回此servlet上下文已知的所有servlet的枚举。
+     * 在这个版本中，这个方法总是返回一个空枚举，并且只保持二进制兼容性。此方法将在Java Servlet API的未来版本中永久删除。
      */
     public Enumeration<Servlet> getServlets();
     
@@ -479,6 +581,10 @@ public interface ServletContext {
      * this method always returns an empty <code>Enumeration</code> and 
      * remains only to preserve binary compatibility. This method will 
      * be permanently removed in a future version of the Java Servlet API.
+     *
+     * 最初定义此方法是为了返回上下文已知的所有servlet名称的枚举。
+     * 在这个版本中，这个方法总是返回一个空的<code>Enumeration</code>，并且只保持二进制兼容性。此方法将在Java Servlet API的未来版本中永久删除。
+     *
      */
     public Enumeration<String> getServletNames();
     
@@ -488,6 +594,8 @@ public interface ServletContext {
      * Writes the specified message to a servlet log file, usually
      * an event log. The name and type of the servlet log file is 
      * specific to the servlet container.
+     *
+     * 将指定的消息写入servlet日志文件，通常是事件日志。servlet日志文件的名称和类型是特定于servlet容器的。
      *
      * @param msg 	a <code>String</code> specifying the 
      *			message to be written to the log file
@@ -503,6 +611,9 @@ public interface ServletContext {
      * <p>This method was originally defined to write an 
      * exception's stack trace and an explanatory error message
      * to the servlet log file.
+     *
+     * 最初定义此方法是为了将异常的堆栈跟踪和解释性错误消息写入servlet日志文件。
+     *
      */
     public void log(Exception exception, String msg);
     
@@ -512,6 +623,8 @@ public interface ServletContext {
      * for a given <code>Throwable</code> exception
      * to the servlet log file. The name and type of the servlet log 
      * file is specific to the servlet container, usually an event log.
+     *
+     * 将针对给定Throwable异常的解释性消息和堆栈跟踪写入servlet日志文件。servlet日志文件的名称和类型特定于servlet容器，通常是事件日志。
      *
      * @param message 		a <code>String</code> that 
      *				describes the error or exception
@@ -525,6 +638,8 @@ public interface ServletContext {
     /**
      * Gets the <i>real</i> path corresponding to the given
      * <i>virtual</i> path.
+     *
+     * 获取与给定虚拟路径对应的真实路径
      *
      * <p>For example, if <tt>path</tt> is equal to <tt>/index.html</tt>,
      * this method will return the absolute file path on the server's
@@ -559,7 +674,9 @@ public interface ServletContext {
 
     /**
      * Returns the name and version of the servlet container on which
-     * the servlet is running. 
+     * the servlet is running.
+     *
+     * 返回servlet正在运行的servlet容器的名称和版本。
      *
      * <p>The form of the returned string is 
      * <i>servername</i>/<i>versionnumber</i>.
@@ -617,6 +734,8 @@ public interface ServletContext {
      * Sets the context initialization parameter with the given name and
      * value on this ServletContext.
      *
+     * 使用此ServletContext上的给定名称和值设置上下文初始化参数。
+     *
      * @param name the name of the context initialization parameter to set
      * @param value the value of the context initialization parameter to set
      *
@@ -642,6 +761,8 @@ public interface ServletContext {
     /**
      * Returns the servlet container attribute with the given name, 
      * or <code>null</code> if there is no attribute by that name.
+     *
+     * 返回具有给定名称的servlet容器属性，如果没有该名称的属性，则返回null。
      *
      * <p>An attribute allows a servlet container to give the
      * servlet additional information not
@@ -675,6 +796,8 @@ public interface ServletContext {
      * Returns an <code>Enumeration</code> containing the 
      * attribute names available within this ServletContext.
      *
+     * 返回包含此ServletContext中可用的属性名的枚举。
+     *
      * <p>Use the {@link #getAttribute} method with an attribute name
      * to get the value of an attribute.
      *
@@ -692,6 +815,11 @@ public interface ServletContext {
      * method will replace the attribute with the new to the new attribute.
      * <p>If listeners are configured on the <code>ServletContext</code> the  
      * container notifies them accordingly.
+     *
+     * 将对象绑定到此ServletContext中的给定属性名称。
+     * 如果指定的名称已经用于属性，则此方法将使用新属性中的新属性替换该属性。
+     * 如果在ServletContext上配置了侦听器，则容器将相应地通知它们。
+     *
      * <p>
      * If a null value is passed, the effect is the same as calling 
      * <code>removeAttribute()</code>.
@@ -730,6 +858,8 @@ public interface ServletContext {
      * ServletContext as specified in the deployment descriptor for this
      * web application by the display-name element.
      *
+     * 返回与此ServletContext对应的此web应用程序的名称，如display-name元素在该web应用程序的部署描述符中指定的。
+     *
      * @return The name of the web application or null if no name has been
      * declared in the deployment descriptor.
      * 
@@ -741,6 +871,8 @@ public interface ServletContext {
     /**
      * Adds the servlet with the given name and class name to this servlet
      * context.
+     *
+     * 将具有给定名称和类名的servlet添加到此servlet上下文。
      *
      * <p>The registered servlet may be further configured via the returned
      * {@link ServletRegistration} object.
@@ -923,6 +1055,8 @@ public interface ServletContext {
      * Gets the ServletRegistration corresponding to the servlet with the
      * given <tt>servletName</tt>.
      *
+     * 获取与具有给定servletName的servlet对应的ServletRegistion。
+     *
      * @return the (complete or preliminary) ServletRegistration for the
      * servlet with the given <tt>servletName</tt>, or null if no
      * ServletRegistration exists under that name
@@ -942,6 +1076,8 @@ public interface ServletContext {
      * Gets a (possibly empty) Map of the ServletRegistration
      * objects (keyed by servlet name) corresponding to all servlets
      * registered with this ServletContext.
+     *
+     * 获取与此ServletContext中注册的所有servlet对应的ServletRegisting对象（可能为空）映射（由servlet名称键入）
      *
      * <p>The returned Map includes the ServletRegistration objects
      * corresponding to all declared and annotated servlets, as well as the
@@ -969,6 +1105,8 @@ public interface ServletContext {
     /**
      * Adds the filter with the given name and class name to this servlet
      * context.
+     *
+     * 将具有给定名称和类名称的过滤器添加到此servlet上下文。
      *
      * <p>The registered filter may be further configured via the returned
      * {@link FilterRegistration} object.
@@ -1016,6 +1154,8 @@ public interface ServletContext {
     /**
      * Registers the given filter instance with this ServletContext
      * under the given <tt>filterName</tt>.
+     *
+     * 在给定的filterName下用此ServletContext注册给定的筛选器实例。
      *
      * <p>The registered filter may be further configured via the returned
      * {@link FilterRegistration} object.
@@ -1135,6 +1275,8 @@ public interface ServletContext {
      * Gets the FilterRegistration corresponding to the filter with the
      * given <tt>filterName</tt>.
      *
+     * 获取与具有给定filterName的过滤器对应的FilterRegistion。
+     *
      * @return the (complete or preliminary) FilterRegistration for the
      * filter with the given <tt>filterName</tt>, or null if no
      * FilterRegistration exists under that name
@@ -1154,6 +1296,8 @@ public interface ServletContext {
      * Gets a (possibly empty) Map of the FilterRegistration
      * objects (keyed by filter name) corresponding to all filters
      * registered with this ServletContext.
+     *
+     * 获取与此ServletContext中注册的所有过滤器相对应的FilterRegistration对象（可能为空）映射（由过滤器名称键入）。
      *
      * <p>The returned Map includes the FilterRegistration objects
      * corresponding to all declared and annotated filters, as well as the
@@ -1183,6 +1327,8 @@ public interface ServletContext {
      * properties of the session tracking cookies created on behalf of this
      * <tt>ServletContext</tt> may be configured.
      *
+     * 获取{@link SessionCookieConfig}对象，通过该对象可以配置代表此ServletContext创建的会话跟踪cookie的各种属性。
+     *
      * <p>Repeated invocations of this method will return the same
      * <tt>SessionCookieConfig</tt> instance.
      *
@@ -1204,6 +1350,8 @@ public interface ServletContext {
     /**
      * Sets the session tracking modes that are to become effective for this
      * <tt>ServletContext</tt>.
+     *
+     * 设置将对此ServletContext有效的会话跟踪模式。
      *
      * <p>The given <tt>sessionTrackingModes</tt> replaces any
      * session tracking modes set by a previous invocation of this
@@ -1236,6 +1384,8 @@ public interface ServletContext {
      * Gets the session tracking modes that are supported by default for this
      * <tt>ServletContext</tt>.
      *
+     * 获取默认情况下此ServletContext支持的会话跟踪模式。
+     *
      * @return set of the session tracking modes supported by default for
      * this <tt>ServletContext</tt>
      *
@@ -1253,6 +1403,8 @@ public interface ServletContext {
     /**
      * Gets the session tracking modes that are in effect for this
      * <tt>ServletContext</tt>.
+     *
+     * 获取对该ServletContext有效的会话跟踪模式。
      *
      * <p>The session tracking modes in effect are those provided to
      * {@link #setSessionTrackingModes setSessionTrackingModes}.
@@ -1277,6 +1429,8 @@ public interface ServletContext {
 
     /**
      * Adds the listener with the given class name to this ServletContext.
+     *
+     * 将具有给定类名的侦听器添加到此ServletContext。
      *
      * <p>The class with the given name will be loaded using the
      * classloader associated with the application represented by this
@@ -1336,6 +1490,8 @@ public interface ServletContext {
 
     /**
      * Adds the given listener to this ServletContext.
+     *
+     * 将给定的侦听器添加到此ServletContext。
      *
      * <p>The given listener must be an instance of one or more of the
      * following interfaces:
@@ -1497,6 +1653,9 @@ public interface ServletContext {
      * <code>web-fragment.xml</code> descriptor files of the web application
      * represented by this ServletContext.
      *
+     * 获取从此ServletContext表示的web应用程序的web.xml和web-fra..xml描述符文件中聚合的jsp-config相关配置。
+     *
+     *
      * @return the <code>&lt;jsp-config&gt;</code> related configuration
      * that was aggregated from the <code>web.xml</code> and
      * <code>web-fragment.xml</code> descriptor files of the web application
@@ -1519,6 +1678,8 @@ public interface ServletContext {
     /**
      * Gets the class loader of the web application represented by this
      * ServletContext.
+     *
+     * 获取此ServletContext标识的web应用程序的类加载器
      *
      * <p>If a security manager exists, and the caller's class loader
      * is not the same as, or an ancestor of the requested class loader,
@@ -1546,6 +1707,8 @@ public interface ServletContext {
 
     /**
      * Declares role names that are tested using <code>isUserInRole</code>.
+     *
+     * 声明使用isUserRole测试的角色名称
      *
      * <p>Roles that are implicitly declared as a result of their use within
      * the {@link ServletRegistration.Dynamic#setServletSecurity
@@ -1575,6 +1738,8 @@ public interface ServletContext {
     /**
      * Returns the configuration name of the logical host on which the
      * ServletContext is deployed.
+     *
+     * 返回部署ServletContext的逻辑主机的配置名。
      *
      * Servlet containers may support multiple logical hosts. This method must
      * return the same name for all the servlet contexts deployed on a logical

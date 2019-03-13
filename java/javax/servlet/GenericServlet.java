@@ -68,10 +68,18 @@ import java.util.ResourceBundle;
  * servlet. To write an HTTP servlet for use on the
  * Web, extend {@link javax.servlet.http.HttpServlet} instead.
  *
+ * 定义通用的、独立于协议的Servlet
+ * 要编写用于WEB的HTTP servlet，请使用{javax.servlet.http.HttpServlet}替代
+ *
  * <p><code>GenericServlet</code> implements the <code>Servlet</code>
  * and <code>ServletConfig</code> interfaces. <code>GenericServlet</code>
  * may be directly extended by a servlet, although it's more common to extend
  * a protocol-specific subclass such as <code>HttpServlet</code>.
+ *
+ * GenericServlet可以由servlet直接扩展，尽管扩展协议特定的子类（如HttpServlet）更为常见
+ *
+ * GenericServlet实现Servlet、ServletConfig接口。
+ *
  *
  * <p><code>GenericServlet</code> makes writing servlets
  * easier. It provides simple versions of the lifecycle methods 
@@ -80,8 +88,13 @@ import java.util.ResourceBundle;
  * also implements the <code>log</code> method, declared in the
  * <code>ServletContext</code> interface. 
  *
+ * GenericServlet使编写Servlet更加容易。它提供了声明周期方法init和destroy以及ServletConfig接口中的方法的简单版本。
+ * GenericServlet还实现了定义在ServletContext的日志方法
+ *
  * <p>To write a generic servlet, you need only
  * override the abstract <code>service</code> method. 
+ *
+ * 编写GenericServlet仅仅需要重写抽象方法service
  *
  *
  * @author 	Various
@@ -102,6 +115,8 @@ public abstract class GenericServlet
      *
      * Does nothing. All of the servlet initialization
      * is done by one of the <code>init</code> methods.
+     *
+     * 所有的servlet初始化都由一个init方法完成。
      *
      */
     public GenericServlet() { }
